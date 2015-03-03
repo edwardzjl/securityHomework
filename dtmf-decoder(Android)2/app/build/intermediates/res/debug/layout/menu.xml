@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/history"
-    	android:title="@string/history"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+
+    <item
+        android:id="@+id/history"
+        android:title="@string/history"
         android:icon="@drawable/ic_menu_history" />
-    <item android:id="@+id/send"
+
+    <item
+        android:id="@+id/send"
         android:title="@string/send"
         android:icon="@drawable/ic_menu_send" />
-    <item android:id="@+id/about"
+
+    <item
+        android:id="@+id/about"
         android:title="@string/about"
         android:icon="@drawable/ic_menu_info" />
-</menu><!-- From: file:/Users/edwardlol/Desktop/workspaces/AndroidStuidio/dtmf-decoder(Android)2/app/src/main/res/layout/menu.xml -->
+</menu><!-- From: file:/E:/workspaces/android_studio/security_homework/DTMFTest/app/src/main/res/layout/menu.xml -->

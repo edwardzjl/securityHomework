@@ -11,41 +11,37 @@ public class HistoryRowAdapter extends ArrayAdapter<HistoryItem> {
     private History history;
 
     public HistoryRowAdapter(Context context, int textViewResourceId) {
-            super(context, textViewResourceId);
-            
-            this.history = new History(context);
-            this.history.load();
+        super(context, textViewResourceId);
+
+        this.history = new History(context);
+        this.history.load();
     }
-    
+
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-            View v = convertView;
-            
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.history_row, null);
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View v = convertView;
+
+        if (v == null) {
+            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = vi.inflate(R.layout.history_row, null);
+        }
+
+        HistoryItem h = history.get(position);
+        if (h != null) {
+            TextView tt = (TextView) v.findViewById(R.id.text);
+            TextView bt = (TextView) v.findViewById(R.id.timestamp);
+            if (tt != null) {
+                tt.setText(h.getText());
             }
-            
-            HistoryItem h = history.get(position);
-            if (h != null) {
-                    TextView tt = (TextView) v.findViewById(R.id.text);
-                    TextView bt = (TextView) v.findViewById(R.id.timestamp);
-                    if (tt != null) 
-                    {
-                          tt.setText(h.getText());                            
-                    }
-                    if(bt != null)
-                    {
-                          bt.setText(h.getFormatedTimestamp());
-                    }
+            if (bt != null) {
+                bt.setText(h.getFormatedTimestamp());
             }
-            return v;
+        }
+        return v;
     }
-    
+
     @Override
-    public int getCount() 
-    {
-    	return this.history.getCount();
+    public int getCount() {
+        return this.history.getCount();
     }
 }
