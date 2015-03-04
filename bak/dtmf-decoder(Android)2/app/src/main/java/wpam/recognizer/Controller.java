@@ -20,18 +20,28 @@ public class Controller {
 
     public void changeState() {
         if (started == false) {
+
             lastValue = ' ';
+
             blockingQueue = new LinkedBlockingQueue<DataBlock>();
+
             mainActivity.start();
+
             recordTask = new RecordTask(this, blockingQueue);
+
             recognizerTask = new RecognizerTask(this, blockingQueue);
+
             recordTask.execute();
             recognizerTask.execute();
+
             started = true;
         } else {
+
             mainActivity.stop();
+
             recognizerTask.cancel(true);
             recordTask.cancel(true);
+
             started = false;
         }
     }
@@ -44,6 +54,7 @@ public class Controller {
         return started;
     }
 
+
     public int getAudioSource() {
         return mainActivity.getAudioSource();
     }
@@ -54,6 +65,7 @@ public class Controller {
 
     public void keyReady(char key) {
         mainActivity.setAciveKey(key);
+
         if (key != ' ')
             if (lastValue != key)
                 mainActivity.addText(key);

@@ -1,12 +1,17 @@
 package wpam.recognizer;
 
+//import pl.polidea.apphance.Apphance;
+
+import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.MediaRecorder;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -18,20 +23,21 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
     private Button stateButton;
     private Button clearButton;
     private EditText recognizeredEditText;
-    private SpectrumView spectrumView;
-    private NumericKeyboard numKeyboard;
 
     Controller controller;
 
     private String recognizeredText;
 
     History history;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,27 +60,9 @@ public class MainActivity extends Activity {
             }
         });
 
-        //spectrumView = new SpectrumView();
-        //spectrumView.setImageView((ImageView) this.findViewById(R.id.spectrum));
-
         recognizeredEditText = (EditText) this.findViewById(R.id.recognizeredText);
         recognizeredEditText.setFocusable(false);
-        /*
-		numKeyboard = new NumericKeyboard();
-		numKeyboard.add('0', (Button)findViewById(R.id.button0));
-		numKeyboard.add('1', (Button)findViewById(R.id.button1));
-		numKeyboard.add('2', (Button)findViewById(R.id.button2));
-		numKeyboard.add('3', (Button)findViewById(R.id.button3));
-		numKeyboard.add('4', (Button)findViewById(R.id.button4));
-		numKeyboard.add('5', (Button)findViewById(R.id.button5));
-		numKeyboard.add('6', (Button)findViewById(R.id.button6));
-		numKeyboard.add('7', (Button)findViewById(R.id.button7));
-		numKeyboard.add('8', (Button)findViewById(R.id.button8));
-		numKeyboard.add('9', (Button)findViewById(R.id.button9));
-		numKeyboard.add('0', (Button)findViewById(R.id.button0));
-		numKeyboard.add('#', (Button)findViewById(R.id.buttonHash));
-		numKeyboard.add('*', (Button)findViewById(R.id.buttonAsterisk));
-		*/
+
         setEnabled(false);
 
         recognizeredText = "";
@@ -105,7 +93,7 @@ public class MainActivity extends Activity {
     }
 
     public void drawSpectrum(Spectrum spectrum) {
-        spectrumView.draw(spectrum);
+//        spectrumView.draw(spectrum);
     }
 
     public void clearText() {
@@ -126,11 +114,11 @@ public class MainActivity extends Activity {
 
     public void setEnabled(boolean enabled) {
         recognizeredEditText.setEnabled(enabled);
-        numKeyboard.setEnabled(enabled);
+//        numKeyboard.setEnabled(enabled);
     }
 
     public void setAciveKey(char key) {
-        numKeyboard.setActive(key);
+//        numKeyboard.setActive(key);
     }
 
     @Override

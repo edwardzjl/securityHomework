@@ -19,7 +19,7 @@ public class Controller {
     }
 
     public void changeState() {
-        if (started == false) {
+        if (!started) {
             lastValue = ' ';
             blockingQueue = new LinkedBlockingQueue<DataBlock>();
             mainActivity.start();
@@ -54,6 +54,7 @@ public class Controller {
 
     public void keyReady(char key) {
         mainActivity.setAciveKey(key);
+
         if (key != ' ')
             if (lastValue != key)
                 mainActivity.addText(key);

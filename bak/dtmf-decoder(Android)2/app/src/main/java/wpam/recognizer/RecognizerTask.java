@@ -24,10 +24,15 @@ public class RecognizerTask extends AsyncTask<Void, Object, Void> {
         while (controller.isStarted()) {
             try {
                 DataBlock dataBlock = blockingQueue.take();
+
                 Spectrum spectrum = dataBlock.FFT();
+
                 spectrum.normalize();
+
                 StatelessRecognizer statelessRecognizer = new StatelessRecognizer(spectrum);
+
                 Character key = recognizer.getRecognizedKey(statelessRecognizer.getRecognizedKey());
+
                 publishProgress(spectrum, key);
 
 //				SpectrumFragment spectrumFragment = new SpectrumFragment(75, 100, spectrum);

@@ -25,9 +25,8 @@ import android.widget.ImageView;
 public class MainActivity extends Activity {
 
     private Button btn1,btn2,btn3,btn4,btn5,btn6,btn7,btn8,btn9,btnAsterisk,btn0,btnHash;
-
     private ToneGenerator mToneGenerator;
-    private Object mToneGeneratorLock = new Object(); // 监视器对象锁
+    private final Object mToneGeneratorLock = new Object(); // 监视器对象锁
     private boolean mDTMFToneEnabled; // 按键操作音
     private static final int TONE_LENGTH_MS = 150; // 延迟时间
     private AudioManager mAudioManager;

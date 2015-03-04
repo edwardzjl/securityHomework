@@ -9,32 +9,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent">
-        <Button
-            android:text="@string/start"
-            android:id="@+id/stateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <Button
-            android:text="@string/clear"
-            android:id="@+id/clearButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <ImageView
-        android:id="@+id/spectrum"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-    <EditText
-        android:text=""
-        android:id="@+id/recognizeredText"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
 
     <TableLayout
         android:layout_height="wrap_content"

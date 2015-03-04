@@ -14,4 +14,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/empty_history" />
-</LinearLayout><!-- From: file:/E:/workspaces/android_studio/security_homework/DTMFTest/app/src/main/res/layout/history.xml -->
+</LinearLayout><!-- From: file:/Users/edwardlol/Desktop/workspaces/AndroidStuidio/security_homework/dtmf-decoder(Android)2/app/src/main/res/layout/history.xml -->

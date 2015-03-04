@@ -23,6 +23,9 @@ import utils.MyApplication;
 public class PhoneListenerService extends Service {
     //private MediaRecorder recorder;
     //private boolean recording = false;
+
+    Controller controller;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -37,11 +40,6 @@ public class PhoneListenerService extends Service {
         manager.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
     }
     private PhoneStateListener listener = new PhoneStateListener() {
-    /*
-    * @see TelephonyManager#CALL_STATE_IDLE 值为0
-    * @see TelephonyManager#CALL_STATE_RINGING 值为1
-    * @see TelephonyManager#CALL_STATE_OFFHOOK 值为2
-    */
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
@@ -79,8 +77,8 @@ public class PhoneListenerService extends Service {
                 m.setAccessible(true);
                 ITelephony iTelephony;
                 iTelephony = (ITelephony) m.invoke(tm);
-                iTelephony.silenceRinger();//不响铃
-                iTelephony.answerRingingCall();//接听
+                iTelephony.silenceRinger(); //不响铃
+                iTelephony.answerRingingCall(); //接听
                 //发送验证信息
                 String message = "your captcha num: ";
                 Random random = new Random();
@@ -89,15 +87,18 @@ public class PhoneListenerService extends Service {
                 message += captcha.toString();
                 sendSMS(Number,message);
                 //接收对方键盘输入
+                controller.start();
                 /*
                 if (未通过验证) {
                     iTelephony.endCall();//结束通话
+
                 } else {
                     //响铃
 
                     //接听
 
                 }
+                controller.stop();
                 */
             }
         } catch (Exception e) {

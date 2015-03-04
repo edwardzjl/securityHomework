@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent"
-    android:layout_width="fill_parent">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/history"
@@ -17,4 +15,4 @@
         android:id="@+id/about"
         android:title="@string/about"
         android:icon="@drawable/ic_menu_info" />
-</menu><!-- From: file:/E:/workspaces/android_studio/security_homework/DTMFTest/app/src/main/res/layout/menu.xml -->
+</menu><!-- From: file:/Users/edwardlol/Desktop/workspaces/AndroidStuidio/security_homework/dtmf-decoder(Android)2/app/src/main/res/layout/menu.xml -->

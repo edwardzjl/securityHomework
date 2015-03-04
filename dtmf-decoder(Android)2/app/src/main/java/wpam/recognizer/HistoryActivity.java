@@ -9,7 +9,6 @@ public class HistoryActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.history);
 
         this.historyRowAdapter = new HistoryRowAdapter(this, R.layout.history_row);
