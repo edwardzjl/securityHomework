@@ -11,11 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int ic_menu_history=0x7f020000;
-        public static final int ic_menu_info=0x7f020001;
-        public static final int ic_menu_send=0x7f020002;
-        public static final int ic_menu_template=0x7f020003;
-        public static final int icon=0x7f020004;
+        public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
         public static final int linearLayout1=0x7f050000;
@@ -25,13 +21,9 @@ public final class R {
         public static final int main=0x7f030000;
     }
     public static final class string {
-        public static final int about_text=0x7f040000;
-        public static final int app_name=0x7f040001;
-        public static final int clear=0x7f040002;
-        public static final int empty_history=0x7f040003;
-        public static final int hello=0x7f040004;
-        public static final int send=0x7f040005;
-        public static final int start=0x7f040006;
-        public static final int stop=0x7f040007;
+        public static final int app_name=0x7f040000;
+        public static final int hello=0x7f040001;
+        public static final int start=0x7f040002;
+        public static final int stop=0x7f040003;
     }
 }
