@@ -18,32 +18,20 @@ public final class R {
         public static final int icon=0x7f020004;
     }
     public static final class id {
-        public static final int about=0x7f050008;
-        public static final int clearButton=0x7f050004;
-        public static final int history=0x7f050006;
-        public static final int linearLayout1=0x7f050002;
-        public static final int recognizeredText=0x7f050005;
-        public static final int send=0x7f050007;
-        public static final int stateButton=0x7f050003;
-        public static final int text=0x7f050000;
-        public static final int timestamp=0x7f050001;
+        public static final int linearLayout1=0x7f050000;
+        public static final int stateButton=0x7f050001;
     }
     public static final class layout {
-        public static final int history=0x7f030000;
-        public static final int history_row=0x7f030001;
-        public static final int main=0x7f030002;
-        public static final int menu=0x7f030003;
+        public static final int main=0x7f030000;
     }
     public static final class string {
-        public static final int about=0x7f040000;
-        public static final int about_text=0x7f040001;
-        public static final int app_name=0x7f040002;
-        public static final int clear=0x7f040003;
-        public static final int empty_history=0x7f040004;
-        public static final int hello=0x7f040005;
-        public static final int history=0x7f040006;
-        public static final int send=0x7f040007;
-        public static final int start=0x7f040008;
-        public static final int stop=0x7f040009;
+        public static final int about_text=0x7f040000;
+        public static final int app_name=0x7f040001;
+        public static final int clear=0x7f040002;
+        public static final int empty_history=0x7f040003;
+        public static final int hello=0x7f040004;
+        public static final int send=0x7f040005;
+        public static final int start=0x7f040006;
+        public static final int stop=0x7f040007;
     }
 }

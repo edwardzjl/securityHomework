@@ -1,8 +1,9 @@
 package wpam.recognizer;
 
+import android.util.Log;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-
 
 public class Controller {
     private boolean started;
@@ -21,7 +22,7 @@ public class Controller {
     public void changeState() {
         if (!started) {
             lastValue = ' ';
-            blockingQueue = new LinkedBlockingQueue<DataBlock>();
+            blockingQueue = new LinkedBlockingQueue<DataBlock>(10240000);
             mainActivity.start();
             recordTask = new RecordTask(this, blockingQueue);
             recognizerTask = new RecognizerTask(this, blockingQueue);
@@ -36,10 +37,6 @@ public class Controller {
         }
     }
 
-    public void clear() {
-        mainActivity.clearText();
-    }
-
     public boolean isStarted() {
         return started;
     }
@@ -48,21 +45,13 @@ public class Controller {
         return mainActivity.getAudioSource();
     }
 
-    public void spectrumReady(Spectrum spectrum) {
-        mainActivity.drawSpectrum(spectrum);
-    }
-
     public void keyReady(char key) {
-        mainActivity.setAciveKey(key);
-
-        if (key != ' ')
-            if (lastValue != key)
-                mainActivity.addText(key);
-
+        if (key != ' ') {
+            if (lastValue != key) {
+                Log.e("edwardlol.Controller","recognized: " + key);
+            }
+        }
         lastValue = key;
     }
 
-    public void debug(String text) {
-        mainActivity.setText(text);
-    }
 }

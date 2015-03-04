@@ -13,18 +13,6 @@ public class DataBlock {
         }
     }
 
-    public DataBlock() {
-
-    }
-
-    public void setBlock(double[] block) {
-        this.block = block;
-    }
-
-    public double[] getBlock() {
-        return block;
-    }
-
     public Spectrum FFT() {
         return new Spectrum(FFT.magnitudeSpectrum(block));
     }

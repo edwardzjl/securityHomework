@@ -1,7 +1,6 @@
 package wpam.recognizer;
 
 public class Spectrum {
-
     private double[] spectrum;
     private int length;
 
@@ -13,20 +12,20 @@ public class Spectrum {
     public void normalize() {
         double maxValue = 0.0;
 
-        for (int i = 0; i < length; ++i)
-            if (maxValue < spectrum[i])
+        for (int i = 0; i < length; ++i) {
+            if (maxValue < spectrum[i]) {
                 maxValue = spectrum[i];
-
-        if (maxValue != 0)
-            for (int i = 0; i < length; ++i)
+            }
+        }
+        if (maxValue != 0) {
+            for (int i = 0; i < length; ++i) {
                 spectrum[i] /= maxValue;
+            }
+        }
     }
 
     public double get(int index) {
         return spectrum[index];
     }
 
-    public int length() {
-        return length;
-    }
 }

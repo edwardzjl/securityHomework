@@ -7,76 +7,10 @@ package math;
  * Java DSP book
  */
 public class FFT {
-
-//	private static int length;
-
     private static double[] r_data = null;
     private static double[] i_data = null;
-    private static boolean forward = true;
-
-	/*	  
-	 private void computeRootArray(int N) {
-		Complex[] w = new Complex[N/2];
-		
-		for(int i=0; i<N/2; i++) {
-			w[i] = Complex.nthRootOfUnity(i, N);
-		}
-	}
-	*/
-
-    public static Complex[] forward(Complex[] x) {
-        int N = x.length;
-
-        if (N == 1) {
-            return new Complex[]{x[0]};
-        } else {
-            Complex[] even = new Complex[N / 2];
-            Complex[] odd = new Complex[N / 2];
-
-            for (int i = 0; i < N / 2; i++) {
-                even[i] = x[2 * i];
-                odd[i] = x[2 * i + 1];
-            }
-
-            Complex[] left = forward(even);
-            Complex[] right = forward(odd);
-
-            Complex[] c = new Complex[N];
-            for (int n = 0; n < N / 2; n++) {
-                double nth = -2 * n * Math.PI / N;
-                Complex wn = new Complex(Math.cos(nth), Math.sin(nth));
-                c[n] = Complex.add(left[n], Complex.multiply(wn, right[n]));
-                c[n + N / 2] = Complex.substract(left[n], Complex.multiply(wn, right[n]));
-            }
-            return c;
-        }
-    }
-
-    public static int bitReverse(int index) {
-        // if length = 8 index goes from 0 to 7
-        // to write 8 we need log2(8)+1=3+1=4 bits.
-        // 8 = 1000, 7 = 111
-        // so to write 7 we need log2(8)=3 bits.
-        int numBits = (int) Tools.log2(8);
-        int ret = 0;
-
-        for (int i = 0; i < numBits; i++) {
-            ret = (ret << 1) + (index & 1);
-            index = index >> 1;
-        }
-        return ret;
-    }
 
     public static double[] magnitudeSpectrum(double[] realPart) {
-//		length = realPart.length;
-//		int localN;
-//		
-//		int numBits = (int)Tools.log2(length);
-//		
-//		for(int m = 1; m <= numBits; m++) {
-//			// localN = 2^m;
-//			localN = 1<<m;
-//		}
         double[] imaginaryPart = new double[realPart.length];
 
         for (int i = 0; i < imaginaryPart.length; i++) {
@@ -107,19 +41,15 @@ public class FFT {
     }
 
     private static void bitReverse2() {
-//        System.out.println("fft: bit reversal");
         /* bit reversal */
         int n = r_data.length;
         int j = 1;
-
         int k;
 
         for (int i = 1; i < n; i++) {
-
             if (i < j) swapInt(i, j);
             k = n / 2;
             while (k >= 1 && k < j) {
-
                 j = j - k;
                 k = k / 2;
             }
@@ -129,21 +59,15 @@ public class FFT {
 
     public static void forwardFFT(double in_r[], double in_i[]) {
         int id;
-
         int localN;
         double wtemp, Wjk_r, Wjk_i, Wj_r, Wj_i;
         double theta, tempr, tempi;
-//        int ti, tj;
 
-        int numBits = (int) Tools.log2(in_r.length);
-        if (forward) {
-            //centering(in_r);
-        }
-
+        //int numBits = (int) Tools.log2(in_r.length);
+        int numBits = (int)(Math.log10(in_r.length) / Math.log10(2.0));
 
         // Truncate input data to a power of two
-        int length = 1 << numBits; // length = 2**nu
-        int n = length;
+        int n = 1 << numBits;
         int nby2;
 
         // Copy passed references to variables to be used within
@@ -153,7 +77,6 @@ public class FFT {
 
         bitReverse2();
         for (int m = 1; m <= numBits; m++) {
-            // localN = 2^m;
             localN = 1 << m;
 
             nby2 = localN / 2;
@@ -165,10 +88,6 @@ public class FFT {
             // for recursive comptutation of sine and cosine
             Wj_r = Math.cos(theta);
             Wj_i = -Math.sin(theta);
-            if (forward == false) {
-                Wj_i = -Wj_i;
-            }
-
 
             for (int j = 0; j < nby2; j++) {
                 // This is the FFT innermost loop
@@ -194,32 +113,8 @@ public class FFT {
                 Wjk_i = Wj_r * Wjk_i + Wj_i * wtemp;
             }
         }
-        // normalize output of fft.
-//        if (forward)
-        if (false)
-            for (int i = 0; i < r_data.length; i++) {
-                r_data[i] = r_data[i] / (double) n;
-                i_data[i] = i_data[i] / (double) n;
-            }
         in_r = r_data;
         in_r = i_data;
     }
 
-    public static Complex[] inverse(Complex[] c) {
-        int N = c.length;
-        Complex[] x = new Complex[N];
-
-        for (int i = 0; i < N; i++) {
-            x[i] = Complex.conjugate(c[i]);
-        }
-
-        x = forward(x);
-
-        for (int i = 0; i < N; i++) {
-            x[i] = Complex.conjugate(x[i]);
-            x[i] = Complex.scale(x[i], 1.0 / N);
-        }
-
-        return x;
-    }
 }

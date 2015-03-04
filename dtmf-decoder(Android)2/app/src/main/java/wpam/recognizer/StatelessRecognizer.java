@@ -1,18 +1,17 @@
 package wpam.recognizer;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class StatelessRecognizer {
-
     private Spectrum spectrum;
     private Collection<Tone> tones;
 
     public StatelessRecognizer(Spectrum spectrum) {
         this.spectrum = spectrum;
-
         tones = new ArrayList<Tone>();
-
         fillTones();
     }
 
@@ -41,12 +40,14 @@ public class StatelessRecognizer {
         SpectrumFragment allSpectrum = new SpectrumFragment(0, 150, spectrum);
         int max = allSpectrum.getMax();
 
-        if (max != lowMax && max != highMax)
+        if (max != lowMax && max != highMax) {
             return ' ';
+        }
 
         for (Tone t : tones) {
-            if (t.match(lowMax, highMax))
+            if (t.match(lowMax, highMax)) {
                 return t.getKey();
+            }
         }
 
         return ' ';

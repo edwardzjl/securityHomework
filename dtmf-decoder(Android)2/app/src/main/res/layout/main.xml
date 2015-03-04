@@ -15,19 +15,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
-
-        <Button
-            android:text="@string/clear"
-            android:id="@+id/clearButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
     </LinearLayout>
-
-    <EditText
-        android:text=""
-        android:id="@+id/recognizeredText"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
 
 </LinearLayout>

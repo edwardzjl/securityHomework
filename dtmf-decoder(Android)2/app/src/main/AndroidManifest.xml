@@ -4,8 +4,6 @@
     android:versionCode="1"
     android:versionName="1.0">
 
-    <uses-sdk android:minSdkVersion="5" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
@@ -20,8 +18,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="HistoryActivity"
-            android:label="@string/history"></activity>
     </application>
 </manifest>
