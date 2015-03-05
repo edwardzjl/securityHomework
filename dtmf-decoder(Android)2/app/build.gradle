@@ -7,11 +7,12 @@ android {
     defaultConfig {
         applicationId "wpam.recognizer"
         minSdkVersion 5
-        targetSdkVersion 5
+        targetSdkVersion 12
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_5
             targetCompatibility JavaVersion.VERSION_1_5
         }
+
     }
 
     buildTypes {

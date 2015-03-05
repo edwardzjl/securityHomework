@@ -6,12 +6,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <!-- 录音权限 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <!-- 开机启动广播的权限 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- SD CARD权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 挂断电话时需要的权限 -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 读取通讯录权限 -->
-    <uses-permission android:name="android.permission.read_contacts" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 写通讯录权限 -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <!-- 短信相关权限 -->
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
@@ -31,6 +33,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".PhoneListenerService">
+            <intent-filter>
+                <action android:name="edwardlol.listenertest.PhoneListenerService" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

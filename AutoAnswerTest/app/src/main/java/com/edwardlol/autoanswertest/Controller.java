@@ -1,7 +1,16 @@
 package com.edwardlol.autoanswertest;
 
+import android.app.Service;
+import android.media.MediaRecorder;
+import android.os.AsyncTask;
+import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.content.Context;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import utils.MyApplication;
 
 /**
  * Created by edwardlol on 15/3/4.
@@ -10,53 +19,29 @@ public class Controller {
     private boolean started;
     private RecordTask recordTask;
     private RecognizerTask recognizerTask;
-    private MainActivity mainActivity;
+    private int audioSource;
     BlockingQueue<DataBlock> blockingQueue;
 
     private Character lastValue;
 
-    public Controller(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
-
-    public void changeState() {
-        if (!started) {
-            lastValue = ' ';
-            blockingQueue = new LinkedBlockingQueue<DataBlock>();
-            mainActivity.start();
-            recordTask = new RecordTask(this, blockingQueue);
-            recognizerTask = new RecognizerTask(this, blockingQueue);
-            recordTask.execute();
-            recognizerTask.execute();
-            started = true;
-        } else {
-            mainActivity.stop();
-            recognizerTask.cancel(true);
-            recordTask.cancel(true);
-            started = false;
-        }
+    public Controller(int AudioSource) {
+        this.audioSource = AudioSource;
     }
 
     public void start() {
         lastValue = ' ';
         blockingQueue = new LinkedBlockingQueue<DataBlock>();
-        mainActivity.start();
         recordTask = new RecordTask(this, blockingQueue);
         recognizerTask = new RecognizerTask(this, blockingQueue);
-        recordTask.execute();
-        recognizerTask.execute();
+        recordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        recognizerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         started = true;
     }
 
     public void stop() {
-        mainActivity.stop();
         recognizerTask.cancel(true);
         recordTask.cancel(true);
         started = false;
-    }
-
-    public void clear() {
-        mainActivity.clearText();
     }
 
     public boolean isStarted() {
@@ -64,13 +49,13 @@ public class Controller {
     }
 
     public int getAudioSource() {
-        return mainActivity.getAudioSource();
+        return audioSource;
     }
 
     public void keyReady(char key) {
         if (key != ' ') {
             if (lastValue != key) {
-                mainActivity.addText(key);
+                Log.e("edward", "recognized: " + key);
             }
         }
         lastValue = key;

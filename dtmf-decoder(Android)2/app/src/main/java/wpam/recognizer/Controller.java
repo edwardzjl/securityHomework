@@ -29,6 +29,7 @@ public class Controller {
             recordTask.execute();
             recognizerTask.execute();
             started = true;
+            Log.e("edwardlol", "AudioSource: " + getAudioSource());
         } else {
             mainActivity.stop();
             recognizerTask.cancel(true);

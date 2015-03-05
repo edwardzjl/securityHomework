@@ -3,6 +3,7 @@ package edwardlol.dtmftest;
 /**
  * Created by edwardlol on 15/3/4.
  */
+//频谱段
 public class SpectrumFragment {
     private int start;
     private int end;

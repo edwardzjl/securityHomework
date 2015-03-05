@@ -1,5 +1,6 @@
 package edwardlol.dtmftest;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.concurrent.BlockingQueue;
@@ -25,13 +26,16 @@ public class Controller {
     public void changeState() {
         if (!started) {
             lastValue = ' ';
-            blockingQueue = new LinkedBlockingQueue<DataBlock>(16000);
+            blockingQueue = new LinkedBlockingQueue<DataBlock>();
             mainActivity.start();
             recordTask = new RecordTask(this, blockingQueue);
             recognizerTask = new RecognizerTask(this, blockingQueue);
-            recordTask.execute();
-            recognizerTask.execute();
+            //recordTask.execute();
+            //recognizerTask.execute();
+            recordTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            recognizerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             started = true;
+            Log.e("ed","controller start!");
         } else {
             mainActivity.stop();
             recognizerTask.cancel(true);
@@ -53,9 +57,7 @@ public class Controller {
             if (lastValue != key) {
                 Log.e("edwardlol.Controller", "recognized: " + key);
             }
-            Log.e("edwardlol.Controller", "lastvalue: " + lastValue + "key: " + key);
         }
-        Log.e("edwardlol.Controller", "key: " + key);
         lastValue = key;
     }
 }

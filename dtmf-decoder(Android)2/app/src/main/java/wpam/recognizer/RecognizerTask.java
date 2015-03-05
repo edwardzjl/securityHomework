@@ -18,13 +18,18 @@ public class RecognizerTask extends AsyncTask<Void, Object, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
+        DataBlock dataBlock;
+        Spectrum spectrum;
+        StatelessRecognizer statelessRecognizer;
+        Character key;
+
         while (controller.isStarted()) {
             try {
-                DataBlock dataBlock = blockingQueue.take();
-                Spectrum spectrum = dataBlock.FFT();
+                dataBlock = blockingQueue.take();
+                spectrum = dataBlock.FFT();
                 spectrum.normalize();
-                StatelessRecognizer statelessRecognizer = new StatelessRecognizer(spectrum);
-                Character key = recognizer.getRecognizedKey(statelessRecognizer.getRecognizedKey());
+                statelessRecognizer = new StatelessRecognizer(spectrum);
+                key = recognizer.getRecognizedKey(statelessRecognizer.getRecognizedKey());
                 publishProgress(spectrum, key);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block

@@ -24,6 +24,9 @@ public class RecordTask extends AsyncTask<Void, Object, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         int bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding) + 100;
+        int bufferReadSize;
+        DataBlock dataBlock;
+
         AudioRecord audioRecord = new AudioRecord(controller.getAudioSource(), frequency, channelConfiguration, audioEncoding, bufferSize);
 
         try {
@@ -31,11 +34,10 @@ public class RecordTask extends AsyncTask<Void, Object, Void> {
             audioRecord.startRecording();
 
             while (controller.isStarted()) {
-                int bufferReadSize = audioRecord.read(buffer, 0, blockSize);
-                DataBlock dataBlock = new DataBlock(buffer, blockSize, bufferReadSize);
+                bufferReadSize = audioRecord.read(buffer, 0, blockSize);
+                dataBlock = new DataBlock(buffer, blockSize, bufferReadSize);
                 blockingQueue.put(dataBlock);
             }
-//            audioRecord.stop();
             audioRecord.release();
 
         } catch (Throwable t) {

@@ -22,22 +22,12 @@ public class CustomContactsHandler {
         Uri uri = Uri.parse("content://com.android.contacts/data/phones/filter/" + Number);
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(uri, new String[]{ContactsContract.Data.DISPLAY_NAME}, null, null, null);
-        /*
-        if (cursor.moveToFirst()) {
-            //Log.i("Contacts", "name = " + cursor.getString(0));
-            return true;
-        } else {
-            return false;
-        }
-        */
         return (cursor.moveToFirst());
     }
 
-    public void AddContacts() {
+    public void AddContacts(Context context, String name, String number, String email) {
     //向raw_contacts表中添加数据
         Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
-        //获得ContentResolver
-        Context context = MyApplication.getInstance();
         ContentResolver resolver = context.getContentResolver();
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
         ContentProviderOperation op1 = ContentProviderOperation.newInsert(uri).withValue("account_name", null).build();
@@ -50,14 +40,14 @@ public class CustomContactsHandler {
         ContentProviderOperation op2 = ContentProviderOperation.newInsert(uri)
                 .withValueBackReference("raw_contact_id", 0)
                 .withValue("mimetype", "vnd.android.cursor.item/name")
-                .withValue("data2", "user2")
+                .withValue("data2", name)
                 .build();
         operations.add(op2);
         //号码
         ContentProviderOperation op3 = ContentProviderOperation.newInsert(uri)
                 .withValueBackReference("raw_contact_id", 0)
                 .withValue("mimetype", "vnd.android.cursor.item/phone_v2")
-                .withValue("data1", "111111")
+                .withValue("data1", number)
                 .withValue("data2", "2")
                 .build();
         operations.add(op3);
@@ -65,7 +55,7 @@ public class CustomContactsHandler {
         ContentProviderOperation op4 = ContentProviderOperation.newInsert(uri)
                 .withValueBackReference("raw_contact_id", 0)
                 .withValue("mimetype", "vnd.android.cursor.item/email_v2")
-                .withValue("data1", "user2@gmail.com")
+                .withValue("data1", email)
                 .withValue("data2", "1")
                 .build();
         operations.add(op4);
@@ -73,7 +63,7 @@ public class CustomContactsHandler {
         try {
             resolver.applyBatch("com.android.contacts", operations);
         } catch(Exception e) {
-            Log.wtf("edwardlol", "Something went wrong with foo!", e);
+            Log.e("edwardlol", "Something went wrong with foo!", e);
         }
         Log.i("edwardlol", "contact added");
     }

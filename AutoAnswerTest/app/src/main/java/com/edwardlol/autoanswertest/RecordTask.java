@@ -27,25 +27,31 @@ public class RecordTask extends AsyncTask<Void, Object, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
         int bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
-
+        int bufferReadSize;
         AudioRecord audioRecord = new AudioRecord(controller.getAudioSource(), frequency, channelConfiguration, audioEncoding, bufferSize);
 
         try {
             short[] buffer = new short[blockSize];
-
             audioRecord.startRecording();
 
             while (controller.isStarted()) {
-                int bufferReadSize = audioRecord.read(buffer, 0, blockSize);
-                DataBlock dataBlock = new DataBlock(buffer, blockSize, bufferReadSize);
-                blockingQueue.put(dataBlock);
+                if (isCancelled()) {
+                    audioRecord.stop();
+                    audioRecord.release();
+                    return null;
+                } else {
+                    bufferReadSize = audioRecord.read(buffer, 0, blockSize);
+                    DataBlock dataBlock = new DataBlock(buffer, blockSize, bufferReadSize);
+                    blockingQueue.put(dataBlock);
+                }
             }
             audioRecord.stop();
-
+            audioRecord.release();
         } catch (Throwable t) {
             Log.e("edwardlol", "Recording Failed");
+            audioRecord.stop();
+            audioRecord.release();
         }
 
         return null;

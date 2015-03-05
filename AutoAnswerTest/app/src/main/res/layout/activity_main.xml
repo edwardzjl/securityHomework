@@ -9,33 +9,34 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <LinearLayout
+    <Button
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        style="?android:attr/buttonBarStyle">
-
-        <Button
-            android:text="@string/start"
-            android:id="@+id/stateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_weight="1"/>
-
-        <Button
-            android:text="@string/clear"
-            android:id="@+id/clearButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_weight="1"/>
-    </LinearLayout>
-
+        android:id="@+id/btnTogglePhoneListening"
+        android:text=""/>
     <EditText
         android:text=""
-        android:id="@+id/recognizedText"
+        android:id="@+id/etContactName"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:hint="input the name of content you want to add"/>
+    <EditText
+        android:text=""
+        android:id="@+id/etContactNumber"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:inputType="number"
+        android:hint="input the number of content you want to add"/>
+    <EditText
+        android:text=""
+        android:id="@+id/etContactEmail"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="input the Email of content you want to add"/>
+    <Button
+        android:text="add contact"
+        android:id="@+id/btnAddContact"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
