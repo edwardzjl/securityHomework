@@ -3,10 +3,8 @@ package com.edwardlol.autoanswertest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaRecorder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,8 +16,9 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
     private Button btnTogglePhoneListening, btnAddContact;
-    public EditText etContactName, etContactNumber, etContactEmail;
     private String ContactName, ContactNumber, ContactEmail;
+    public EditText etContactName, etContactNumber, etContactEmail;
+    private String TAG = "edwardlol.MainActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,12 +56,15 @@ public class MainActivity extends ActionBarActivity {
                 } else if (ContactEmail == null || ContactEmail.length() <= 0) {
                     Toast.makeText(MainActivity.this, "must input content email", Toast.LENGTH_SHORT).show();
                 } else {
+                    /*
                     try {
                         CustomContactsHandler contactsHandler = new CustomContactsHandler();
                         contactsHandler.AddContacts(getApplicationContext(), ContactName, ContactNumber, ContactEmail);
                     } catch(Exception e) {
-                        Log.e("edwardlol", "Something went wrong with foo!", e);
-                    }
+                        Log.e("edwardlol.MainActivity", "Something went wrong with foo!", e);
+                    }*/
+                    CustomContactsHandler contactsHandler = new CustomContactsHandler();
+                    contactsHandler.AddContacts(getApplicationContext(), ContactName, ContactNumber, ContactEmail);
 
                 }
             }
@@ -72,12 +74,12 @@ public class MainActivity extends ActionBarActivity {
 
     public void changeState() {
         if (isServiceRunning(getApplicationContext(),"com.edwardlol.autoanswertest.PhoneListenerService")) {
-            Log.e("TAG","is running, now stop");
+            Log.d(TAG, "stop filtering");
             Intent i = new Intent(getApplicationContext(), PhoneListenerService.class);
             stopService(i);
             btnTogglePhoneListening.setText("start");
         } else {
-            Log.e("TAG","is not running, now start");
+            Log.d(TAG,"start filtering");
             Intent i = new Intent(getApplicationContext(), PhoneListenerService.class);
             startService(i);
             btnTogglePhoneListening.setText("stop");

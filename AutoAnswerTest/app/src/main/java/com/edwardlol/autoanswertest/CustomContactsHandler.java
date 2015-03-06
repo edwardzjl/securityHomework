@@ -14,10 +14,9 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import utils.MyApplication;
-
 public class CustomContactsHandler {
-    //根据电话号码查询姓名
+    private String TAG = "edwardlol.CustomContactHandler";
+    //根据号码查询姓名
     public boolean inContacts(String Number, Context context) {
         Uri uri = Uri.parse("content://com.android.contacts/data/phones/filter/" + Number);
         ContentResolver resolver = context.getContentResolver();
@@ -63,8 +62,8 @@ public class CustomContactsHandler {
         try {
             resolver.applyBatch("com.android.contacts", operations);
         } catch(Exception e) {
-            Log.e("edwardlol", "Something went wrong with foo!", e);
+            Log.d(TAG, "Something went wrong!", e);
         }
-        Log.i("edwardlol", "contact added");
+        Log.d(TAG, "contact added");
     }
 }

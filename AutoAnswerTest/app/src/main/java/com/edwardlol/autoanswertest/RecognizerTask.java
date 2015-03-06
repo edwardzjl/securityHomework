@@ -1,6 +1,7 @@
 package com.edwardlol.autoanswertest;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -8,15 +9,17 @@ import java.util.concurrent.BlockingQueue;
  * Created by edwardlol on 15/3/4.
  */
 public class RecognizerTask extends AsyncTask<Void, Object, Void> {
-    private Controller controller;
     private BlockingQueue<DataBlock> blockingQueue;
     private Recognizer recognizer;
+    private String TAG = "edwardlol.RecognizerTask";
 
-    public RecognizerTask(Controller controller, BlockingQueue<DataBlock> blockingQueue) {
-        this.controller = controller;
+    PhoneListenerService phoneListenerService;
+
+    public RecognizerTask(PhoneListenerService phoneListenerService, BlockingQueue<DataBlock> blockingQueue) {
+        this.phoneListenerService = phoneListenerService;
         this.blockingQueue = blockingQueue;
-
         recognizer = new Recognizer();
+        Log.d(TAG, "RecognizerTask running");
     }
 
     @Override
@@ -26,7 +29,7 @@ public class RecognizerTask extends AsyncTask<Void, Object, Void> {
         Character key;
         StatelessRecognizer statelessRecognizer;
 
-        while (controller.isStarted()) {
+        while (phoneListenerService.isStarted()) {
             if (isCancelled()) {
                 return null;
             } else {
@@ -39,6 +42,7 @@ public class RecognizerTask extends AsyncTask<Void, Object, Void> {
                     publishProgress(spectrum, key);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
+                    Log.d(TAG, "sth went wrong", e);
                 }
             }
         }
@@ -47,6 +51,6 @@ public class RecognizerTask extends AsyncTask<Void, Object, Void> {
 
     protected void onProgressUpdate(Object... progress) {
         Character key = (Character) progress[1];
-        controller.keyReady(key);
+        phoneListenerService.keyReady(key);
     }
 }

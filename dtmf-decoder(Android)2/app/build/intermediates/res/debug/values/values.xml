@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- From: file:/Users/edwardlol/Desktop/workspaces/AndroidStuidio/security_homework/dtmf-decoder(Android)2/app/src/main/res/values/strings.xml -->
-    <eat-comment/>
-    <string name="app_name">DTMF decoder</string>
-    <string name="hello">Hello World, recognizerActivity!</string>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
-</resources>

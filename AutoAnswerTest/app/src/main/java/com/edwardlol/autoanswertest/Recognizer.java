@@ -10,7 +10,7 @@ public class Recognizer {
     char actualValue;
 
     public Recognizer() {
-        history = new ArrayList<Character>();
+        history = new ArrayList<>();
         actualValue = ' ';
     }
 

@@ -7,26 +7,32 @@ package com.edwardlol.autoanswertest;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRecorder;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.Toast;
-import android.os.Environment;
-import utils.MyApplication;
 import com.android.internal.telephony.ITelephony;
 
 public class PhoneListenerService extends Service {
+    private String TAG = "edwardlol.PhoneListenerService";
+    private static int CAPTCHA_LENGTH = 4;
+    private boolean filterStarted;
+    private Character lastValue;
+    private RecognizerTask recognizerTask;
+    private RecordingThread recordingThread;
+    private int matching_Index;
 
-    private int audioSource;
-
-    Controller controller;
+    private String CAPTCHA;
+    public BlockingQueue<DataBlock> DataStream;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -34,7 +40,7 @@ public class PhoneListenerService extends Service {
     }
     @Override
     public void onCreate() {
-        Log.e("TAG", "service onCreate()");
+        Log.d(TAG, "service onCreate()");
         super.onCreate();
         //电话服务管理
         TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -43,7 +49,7 @@ public class PhoneListenerService extends Service {
     }
 
     public void onDestroy() {
-        Log.e("TAG", "service onDestroy()");
+        Log.d(TAG, "service onDestroy()");
         super.onDestroy();
         //电话服务管理
         TelephonyManager manager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -55,7 +61,7 @@ public class PhoneListenerService extends Service {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             super.onCallStateChanged(state, incomingNumber);
-            Log.e("TAG", "state: " + state + ", num: " + incomingNumber);
+            Log.d(TAG, "phone state: " + state + ", incoming number: " + incomingNumber);
             switch (state) {
                 case TelephonyManager.CALL_STATE_IDLE: // 没有来电 或者 挂断
                     break;
@@ -70,44 +76,32 @@ public class PhoneListenerService extends Service {
         }
     };
 
+
     //电话拦截
     public void callFilter(String Number) {
+        CAPTCHA = "";
+        matching_Index = 0;
         CustomContactsHandler handler = new CustomContactsHandler();
+
         try {
             if (handler.inContacts(Number, getApplicationContext())) {
-                Log.e("edward.PhoneListenerService", "in contacts");
+                Log.d(TAG, "in contacts");
                 //do nothing
             } else {
-                Log.e("edward.PhoneListenerService", "not in contacts, filtering...");
+                Log.d(TAG, "not in contacts, filtering...");
                 //发送验证信息
                 String message = "your captcha num: ";
-                Random random = new Random();
-                Integer captcha = random.nextInt(10000)+1;
-                message += captcha.toString();
-                sendSMS(Number,message);
+                CAPTCHA = getCAPTCHA(CAPTCHA_LENGTH);
+                Log.d(TAG, "CAPTHA number: " + CAPTCHA);
+                message += CAPTCHA;
+                sendSMS(Number, message);
                 //自动接听电话
                 answerRingingCall(getApplicationContext());
 
-                //接收对方键盘输入
-                audioSource = getAudioSource();
-                controller = new Controller(audioSource);
-                controller.start();
-                Log.e("edwardlol", "PhoneListenerService:AudioSource: " + controller.getAudioSource());
-                /*
-                if (未通过验证) {
-                    iTelephony.endCall();//结束通话
-
-                } else {
-                    //响铃
-
-                    //接听
-
-                }
-                controller.stop();
-                */
+                startFiltering();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.d(TAG, "callFilter went wrong: ", e);
         }
     }
 
@@ -122,18 +116,80 @@ public class PhoneListenerService extends Service {
         }
     }
 
+    public void startFiltering() {
+        lastValue = ' ';
+        DataStream = new LinkedBlockingQueue<>(4);
+
+        recordingThread = new RecordingThread(this, DataStream);
+        recordingThread.start();
+
+        recognizerTask = new RecognizerTask(this, DataStream);
+        recognizerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        filterStarted = true;
+    }
+
+    public void stopFiltering() {
+        recognizerTask.cancel(true);
+        filterStarted = false;
+    }
+
+    public boolean isStarted() {
+        return filterStarted;
+    }
+
+    public void keyReady(char key) {
+
+        if (key != ' ') {
+            if (lastValue != key) {
+                Log.d(TAG, "recognized: " + key);
+                if (CAPTCHA != null && CAPTCHA.length() > 0) {
+                    if (key == '#') {
+                        if (matching_Index == CAPTCHA_LENGTH) {
+                            //ring again to notify the user
+                            Log.d(TAG,"call verified!");
+                        } else {
+                            endCall();
+                        }
+                        stopFiltering();
+                    } else {
+                        if (key == CAPTCHA.charAt(matching_Index)) {
+                            matching_Index++;
+                        } else {
+                            matching_Index = 0;
+                        }
+                    }
+                }
+            }
+        }
+        lastValue = key;
+
+    }
+
+    private String getCAPTCHA(int n) {
+        String CAPTCHA = "";
+        Random random;
+        Integer num;
+
+        for (int i = 0; i < n; i++) {
+            random = new Random();
+            num = Math.abs(random.nextInt() % 10);
+            CAPTCHA += num.toString();
+        }
+        return CAPTCHA;
+    }
+
     //适用各种版本的自动接听，5.0模拟器试了没用
     public synchronized void answerRingingCall(Context context) {
         try {
-            Log.e("try to answer", "below 2.3");
+            Log.d(TAG, "try to answer below 2.3");
             //ITelephony itelephony = getITelephony(mTelephonyManager);
             Method method = Class.forName("android.os.ServiceManager").getMethod("getService", String.class);
             IBinder binder = (IBinder) method.invoke(null, new Object[]{TELEPHONY_SERVICE});
             ITelephony itelephony = ITelephony.Stub.asInterface(binder);
-            //itelephony.silenceRinger();
+            itelephony.silenceRinger();
             itelephony.answerRingingCall();
         } catch (Exception e1) {
-            Log.e("try to answer", "2.3~4.1", e1);
+            Log.d(TAG, "try to answer 2.3 ~ 4.1", e1);
             try {
                 Intent localIntent1 = new Intent(Intent.ACTION_HEADSET_PLUG);
                 localIntent1.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -160,14 +216,14 @@ public class PhoneListenerService extends Service {
                 context.sendOrderedBroadcast(localIntent4,"android.permission.CALL_PRIVILEGED");
             } catch (Exception e2) {
                 try{
-                    Log.e("try to answer", "for 4.1 and above");
+                    Log.d(TAG, "try to answer for 4.1 and above way 1", e2);
                     Intent intent = new Intent("android.intent.action.MEDIA_BUTTON");
                     KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
                     intent.putExtra("android.intent.extra.KEY_EVENT",keyEvent);
                     context.sendOrderedBroadcast(intent, "android.permission.CALL_PRIVILEGED");
 //                    sendOrderedBroadcast(intent,"android.permission.CALL_PRIVILEGED");
                 } catch (Exception e3) {
-                    Log.e("try to answer", "for 4.1 and above way2", e3);
+                    Log.d(TAG, "try to answer for 4.1 and above way2", e3);
                     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
                     KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
                     mediaButtonIntent.putExtra(Intent.EXTRA_KEY_EVENT,keyEvent);
@@ -176,6 +232,21 @@ public class PhoneListenerService extends Service {
                 }
             }
         }
+    }
+
+    public synchronized void endCall() {
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        Class<TelephonyManager> c = TelephonyManager.class;
+        Method mthEndCall;
+        try {
+            mthEndCall = c.getDeclaredMethod("getITelephony", (Class[]) null);
+            mthEndCall.setAccessible(true);
+            ITelephony iTelephony = (ITelephony) mthEndCall.invoke(tm, (Object[]) null);
+            iTelephony.endCall();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "endCall test");
     }
 
     public int getAudioSource() {
