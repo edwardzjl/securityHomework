@@ -76,7 +76,6 @@ public class PhoneListenerService extends Service {
         }
     };
 
-
     //电话拦截
     public void callFilter(String Number) {
         CAPTCHA = "";
@@ -92,8 +91,9 @@ public class PhoneListenerService extends Service {
                 //发送验证信息
                 String message = "your captcha num: ";
                 CAPTCHA = getCAPTCHA(CAPTCHA_LENGTH);
-                Log.d(TAG, "CAPTHA number: " + CAPTCHA);
+                Log.d(TAG, "CAPTCHA number: " + CAPTCHA);
                 message += CAPTCHA;
+                message += ", press '#' to submit.";
                 sendSMS(Number, message);
                 //自动接听电话
                 answerRingingCall(getApplicationContext());
@@ -138,7 +138,6 @@ public class PhoneListenerService extends Service {
     }
 
     public void keyReady(char key) {
-
         if (key != ' ') {
             if (lastValue != key) {
                 Log.d(TAG, "recognized: " + key);
@@ -191,23 +190,24 @@ public class PhoneListenerService extends Service {
         } catch (Exception e1) {
             Log.d(TAG, "try to answer 2.3 ~ 4.1", e1);
             try {
+                //插耳机
                 Intent localIntent1 = new Intent(Intent.ACTION_HEADSET_PLUG);
                 localIntent1.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 localIntent1.putExtra("state", 1);
                 localIntent1.putExtra("microphone", 1);
                 localIntent1.putExtra("name", "Headset");
                 context.sendOrderedBroadcast(localIntent1,"android.permission.CALL_PRIVILEGED");
-
+                //按下耳机按钮
                 Intent localIntent2 = new Intent(Intent.ACTION_MEDIA_BUTTON);
                 KeyEvent localKeyEvent1 = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_HEADSETHOOK);
                 localIntent2.putExtra("android.intent.extra.KEY_EVENT",    localKeyEvent1);
                 context.sendOrderedBroadcast(localIntent2,"android.permission.CALL_PRIVILEGED");
-
+                //放开耳机按钮
                 Intent localIntent3 = new Intent(Intent.ACTION_MEDIA_BUTTON);
                 KeyEvent localKeyEvent2 = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
                 localIntent3.putExtra("android.intent.extra.KEY_EVENT",    localKeyEvent2);
                 context.sendOrderedBroadcast(localIntent3,"android.permission.CALL_PRIVILEGED");
-
+                //拔出耳机
                 Intent localIntent4 = new Intent(Intent.ACTION_HEADSET_PLUG);
                 localIntent4.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 localIntent4.putExtra("state", 0);
@@ -216,19 +216,23 @@ public class PhoneListenerService extends Service {
                 context.sendOrderedBroadcast(localIntent4,"android.permission.CALL_PRIVILEGED");
             } catch (Exception e2) {
                 try{
-                    Log.d(TAG, "try to answer for 4.1 and above way 1", e2);
-                    Intent intent = new Intent("android.intent.action.MEDIA_BUTTON");
-                    KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
-                    intent.putExtra("android.intent.extra.KEY_EVENT",keyEvent);
-                    context.sendOrderedBroadcast(intent, "android.permission.CALL_PRIVILEGED");
-//                    sendOrderedBroadcast(intent,"android.permission.CALL_PRIVILEGED");
-                } catch (Exception e3) {
-                    Log.d(TAG, "try to answer for 4.1 and above way2", e3);
+                    Log.d(TAG, "try to answer for 4.1 and above way2", e2);
                     Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
                     KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
                     mediaButtonIntent.putExtra(Intent.EXTRA_KEY_EVENT,keyEvent);
-                    context.sendOrderedBroadcast(mediaButtonIntent, null);
-//                    sendOrderedBroadcast(mediaButtonIntent, null);
+//                    context.sendOrderedBroadcast(mediaButtonIntent, null);
+                    sendOrderedBroadcast(mediaButtonIntent, null);
+
+                } catch (Exception e3) {
+
+
+
+                    Log.d(TAG, "try to answer for 4.1 and above way 1", e3);
+                    Intent intent = new Intent("android.intent.action.MEDIA_BUTTON");
+                    KeyEvent keyEvent = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_HEADSETHOOK);
+                    intent.putExtra("android.intent.extra.KEY_EVENT",keyEvent);
+//                    context.sendOrderedBroadcast(intent, "android.permission.CALL_PRIVILEGED");
+                    sendOrderedBroadcast(intent,"android.permission.CALL_PRIVILEGED");
                 }
             }
         }

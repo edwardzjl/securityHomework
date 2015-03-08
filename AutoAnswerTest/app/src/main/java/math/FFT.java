@@ -22,7 +22,7 @@ public class FFT {
         return realPart;
     }
 
-    //	 swap Zi with Zj
+    //将实数、虚数各自的第i－1位和第j位互换
     private static void swapInt(int i, int j) {
         double tempr;
         int ti;
@@ -53,14 +53,13 @@ public class FFT {
             j = j + k;
         }
     }
-
+    //正向FFT，将时域信号转化为频域信号
     public static void forwardFFT(double in_r[], double in_i[]) {
         int id;
         int localN;
         double wtemp, Wjk_r, Wjk_i, Wj_r, Wj_i;
         double theta, tempr, tempi;
 
-        //int numBits = (int) Tools.log2(in_r.length);
         int numBits = (int)(Math.log10(in_r.length) / Math.log10(2.0));
 
         // Truncate input data to a power of two

@@ -17,7 +17,7 @@ public class Recognizer {
     public char getRecognizedKey(char recognizedKey) {
         history.add(recognizedKey);
 
-        if (history.size() <= 4) {
+        if (history.size() < 5) {
             return ' ';
         }
 
@@ -30,7 +30,7 @@ public class Recognizer {
             }
         }
 
-        if (count >= 3) {
+        if (count > 2) {
             actualValue = recognizedKey;
         }
 

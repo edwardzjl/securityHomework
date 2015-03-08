@@ -3,6 +3,7 @@ package com.edwardlol.autoanswertest;
 /**
  * Created by edwardlol on 15/3/4.
  */
+//频域化后的音频数据
 public class Spectrum {
     private double[] spectrum;
     private int length;

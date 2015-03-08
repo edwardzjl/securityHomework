@@ -16,7 +16,7 @@ public class RecordingThread extends Thread {
     private int audioEncoding = AudioFormat.ENCODING_PCM_16BIT;
     private int bufferSize = AudioRecord.getMinBufferSize(frequency, channelConfiguration, audioEncoding);
     private int bufferReadSize;
-    private String TAG = "edwardlol.RecordingThreaad";
+    private String TAG = "edwardlol.RecordingThread";
 
     public PhoneListenerService phoneListenerService;
     public BlockingQueue<DataBlock> DataStream;

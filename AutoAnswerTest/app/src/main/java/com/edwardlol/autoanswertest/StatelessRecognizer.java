@@ -12,11 +12,13 @@ public class StatelessRecognizer {
 
     public StatelessRecognizer(Spectrum spectrum) {
         this.spectrum = spectrum;
-        tones = new ArrayList<Tone>();
+        tones = new ArrayList<>();
         fillTones();
     }
 
     private void fillTones() {
+        //f = ax + b
+        //a = 0.0625, b = 1.4375
         tones.add(new Tone(45, 77, '1'));
         tones.add(new Tone(45, 86, '2'));
         tones.add(new Tone(45, 95, '3'));
@@ -38,12 +40,14 @@ public class StatelessRecognizer {
         int lowMax = lowFragment.getMax();
         int highMax = highFragment.getMax();
 
+/*
         SpectrumFragment allSpectrum = new SpectrumFragment(0, 150, spectrum);
         int max = allSpectrum.getMax();
 
         if (max != lowMax && max != highMax) {
             return ' ';
         }
+*/
 
         for (Tone t : tones) {
             if (t.match(lowMax, highMax)) {

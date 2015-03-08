@@ -29,28 +29,54 @@ public class RecognizerTask extends AsyncTask<Void, Object, Void> {
         Character key;
         StatelessRecognizer statelessRecognizer;
 
+/*
         while (phoneListenerService.isStarted()) {
             if (isCancelled()) {
-                return null;
+                break;
+                //return null;
             } else {
                 try {
-                    dataBlock = blockingQueue.take();
-                    spectrum = dataBlock.FFT();
+                    dataBlock = blockingQueue.take(); //取出时域信号
+                    spectrum = dataBlock.FFT(); //进行FFT变换，转变成频域信号
                     spectrum.normalize();
                     statelessRecognizer = new StatelessRecognizer(spectrum);
                     key = recognizer.getRecognizedKey(statelessRecognizer.getRecognizedKey());
-                    publishProgress(spectrum, key);
+                    //publishProgress(spectrum, key);
+                    publishProgress(key);
                 } catch (InterruptedException e) {
                     // TODO Auto-generated catch block
                     Log.d(TAG, "sth went wrong", e);
                 }
             }
         }
+*/
+
+        while (!isCancelled()) {
+            try {
+                dataBlock = blockingQueue.take(); //取出时域信号
+                spectrum = dataBlock.FFT(); //进行FFT变换，转变成频域信号
+                spectrum.normalize();
+                statelessRecognizer = new StatelessRecognizer(spectrum);
+                key = recognizer.getRecognizedKey(statelessRecognizer.getRecognizedKey());
+                //publishProgress(spectrum, key);
+                publishProgress(key);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                Log.d(TAG, "sth went wrong", e);
+            }
+
+        }
+
+
+
         return null;
     }
 
     protected void onProgressUpdate(Object... progress) {
-        Character key = (Character) progress[1];
-        phoneListenerService.keyReady(key);
+
+            //Character key = (Character) progress[1];
+            Character key = (Character) progress[0];
+            phoneListenerService.keyReady(key);
+
     }
 }

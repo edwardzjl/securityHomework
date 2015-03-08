@@ -20,7 +20,8 @@ public class CustomContactsHandler {
     public boolean inContacts(String Number, Context context) {
         Uri uri = Uri.parse("content://com.android.contacts/data/phones/filter/" + Number);
         ContentResolver resolver = context.getContentResolver();
-        Cursor cursor = resolver.query(uri, new String[]{ContactsContract.Data.DISPLAY_NAME}, null, null, null);
+//        Cursor cursor = resolver.query(uri, new String[]{ContactsContract.Data.DISPLAY_NAME}, null, null, null);
+        Cursor cursor = resolver.query(uri, null, null, null, null);
         return (cursor.moveToFirst());
     }
 

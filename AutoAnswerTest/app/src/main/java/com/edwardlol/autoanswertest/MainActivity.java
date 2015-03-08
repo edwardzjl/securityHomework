@@ -56,16 +56,8 @@ public class MainActivity extends ActionBarActivity {
                 } else if (ContactEmail == null || ContactEmail.length() <= 0) {
                     Toast.makeText(MainActivity.this, "must input content email", Toast.LENGTH_SHORT).show();
                 } else {
-                    /*
-                    try {
-                        CustomContactsHandler contactsHandler = new CustomContactsHandler();
-                        contactsHandler.AddContacts(getApplicationContext(), ContactName, ContactNumber, ContactEmail);
-                    } catch(Exception e) {
-                        Log.e("edwardlol.MainActivity", "Something went wrong with foo!", e);
-                    }*/
                     CustomContactsHandler contactsHandler = new CustomContactsHandler();
                     contactsHandler.AddContacts(getApplicationContext(), ContactName, ContactNumber, ContactEmail);
-
                 }
             }
         });
